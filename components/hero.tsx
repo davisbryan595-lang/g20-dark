@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ChevronDown } from "lucide-react"
 
@@ -14,6 +15,15 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      {/* HD background image */}
+      <Image
+        src="https://images.pexels.com/photos/6872601/pexels-photo-6872601.jpeg"
+        alt="Car detailing with high-pressure wash in a dark garage"
+        fill
+        priority
+        className="absolute inset-0 object-cover opacity-50"
+      />
+
       {/* Background gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
 

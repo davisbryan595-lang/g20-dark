@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -21,9 +22,16 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="#" className="flex items-center gap-2 group">
-            <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-secondary to-secondary/50 flex items-center justify-center">
-              <span className="text-lg font-bold text-primary">G2O</span>
+          <Link href="/" className="flex items-center gap-2 group" aria-label="Go to home">
+            <div className="relative w-12 h-12 brand-logo">
+              <Image
+                src="https://cdn.builder.io/api/v1/image/assets%2F5c758e804cba4fa3a488e9088887877b%2F7e0659a1448142469160bc2e1941f920?format=webp&width=800"
+                alt="G2O Auto Detailing logo"
+                fill
+                sizes="48px"
+                className="object-contain"
+                priority
+              />
             </div>
           </Link>
 
@@ -33,7 +41,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-foreground/80 hover:text-accent transition-colors duration-300"
+                className="nav-liquid text-sm font-medium text-foreground/80"
               >
                 {link.label}
               </Link>
@@ -69,7 +77,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-4 py-2 text-sm font-medium text-foreground/80 hover:text-accent transition-colors"
+                className="nav-liquid block px-4 py-2 text-sm font-medium text-foreground/80"
                 onClick={() => setIsOpen(false)}
               >
                 {link.label}

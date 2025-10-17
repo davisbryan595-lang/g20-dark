@@ -2,30 +2,84 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { motion } from "framer-motion"
+import Image from "next/image"
 import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react"
 
 const galleryImages = [
-  { id: 1, title: "Ceramic Coating", category: "exterior" },
-  { id: 2, title: "Paint Correction", category: "exterior" },
-  { id: 3, title: "Interior Detail", category: "interior" },
-  { id: 4, title: "Full Detail", category: "full" },
-  { id: 5, title: "Wheel Shine", category: "exterior" },
-  { id: 6, title: "Leather Care", category: "interior" },
+  {
+    id: 1,
+    title: "Ceramic Coating",
+    category: "exterior",
+    src: "https://images.pexels.com/photos/13805638/pexels-photo-13805638.jpeg",
+    alt: "Water beading on coated hood",
+  },
+  {
+    id: 2,
+    title: "Paint Correction",
+    category: "exterior",
+    src: "https://images.pexels.com/photos/5233261/pexels-photo-5233261.jpeg",
+    alt: "Polishing paint with a dual-action polisher",
+  },
+  {
+    id: 3,
+    title: "Interior Detail",
+    category: "interior",
+    src: "https://images.pexels.com/photos/6873119/pexels-photo-6873119.jpeg",
+    alt: "Thorough vacuuming and interior cleaning",
+  },
+  {
+    id: 4,
+    title: "Full Detail",
+    category: "full",
+    src: "https://images.pexels.com/photos/3354648/pexels-photo-3354648.jpeg",
+    alt: "Full exterior foam wash",
+  },
+  {
+    id: 5,
+    title: "Wheel Shine",
+    category: "exterior",
+    src: "https://images.pexels.com/photos/4870674/pexels-photo-4870674.jpeg",
+    alt: "Deep clean of wheels and tires",
+  },
+  {
+    id: 6,
+    title: "Leather Care",
+    category: "interior",
+    src: "https://images.pexels.com/photos/8096271/pexels-photo-8096271.jpeg",
+    alt: "Leather cleaning and conditioning",
+  },
 ]
 
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
-  const [dragStart, setDragStart] = useState(0)
-  const [dragEnd, setDragEnd] = useState(0)
 
-  const handleDragStart = (e: React.MouseEvent) => {
-    setDragStart(e.clientX)
+  // Before/After slider state
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [pos, setPos] = useState(50)
+  const [hovering, setHovering] = useState(false)
+
+  const beforeUrl = "https://images.pexels.com/photos/18077901/pexels-photo-18077901.jpeg"
+  const afterUrl = "https://images.pexels.com/photos/27993133/pexels-photo-27993133.jpeg"
+
+  const updatePosition = useCallback((clientX: number) => {
+    const el = containerRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = Math.max(rect.left, Math.min(clientX, rect.right))
+    const pct = ((x - rect.left) / rect.width) * 100
+    setPos(pct)
+  }, [])
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!hovering) return
+    updatePosition(e.clientX)
   }
 
-  const handleDragEnd = (e: React.MouseEvent) => {
-    setDragEnd(e.clientX)
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!hovering) return
+    updatePosition(e.touches[0].clientX)
   }
 
   return (
@@ -58,51 +112,72 @@ export default function Gallery() {
               className="group relative h-64 bg-card/50 backdrop-blur-sm border border-border rounded-lg overflow-hidden cursor-pointer hover:border-accent/50 transition-all"
               onClick={() => setSelectedImage(image.id)}
             >
-              {/* Placeholder with gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-primary/20 group-hover:from-accent/30 group-hover:to-primary/30 transition-all" />
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
               {/* Content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <ZoomIn className="w-8 h-8 text-accent/50 group-hover:text-accent group-hover:scale-110 transition-all mb-2" />
-                <h3 className="text-lg font-semibold text-center">{image.title}</h3>
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                <ZoomIn className="w-8 h-8 text-accent/70 group-hover:text-accent group-hover:scale-110 transition-all mb-2" />
+                <h3 className="text-lg font-semibold">{image.title}</h3>
               </div>
-
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all" />
             </motion.div>
           ))}
         </div>
 
         {/* Before/After Slider */}
         <motion.div
+          ref={containerRef}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="relative h-96 bg-card/50 backdrop-blur-sm border border-border rounded-lg overflow-hidden group"
+          className="relative h-96 bg-card/50 backdrop-blur-sm border border-border rounded-lg overflow-hidden group cursor-col-resize select-none"
+          onMouseEnter={() => setHovering(true)}
+          onMouseLeave={() => {
+            setHovering(false)
+            setPos(50)
+          }}
+          onMouseMove={onMouseMove}
+          onTouchStart={() => setHovering(true)}
+          onTouchEnd={() => {
+            setHovering(false)
+            setPos(50)
+          }}
+          onTouchMove={onTouchMove}
+          aria-label="Before and after car detailing comparison slider"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-primary/10" />
+          {/* Before (dirty) */}
+          <Image src={beforeUrl} alt="Before - dirty car" fill className="object-cover" />
 
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold mb-2">Before & After</h3>
-              <p className="text-foreground/70">Drag to compare the transformation</p>
+          {/* After (clean) clipped to position */}
+          <div className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${pos}%` }}>
+            <Image src={afterUrl} alt="After - clean car" fill className="object-cover" />
+          </div>
+
+          {/* Handle */}
+          <div
+            className="absolute top-0 bottom-0"
+            style={{ left: `calc(${pos}% - 1px)` }}
+          >
+            <div className="relative h-full w-0.5 bg-accent/80">
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-accent shadow-[0_0_20px_var(--ring)] flex items-center justify-center">
+                <ChevronLeft className="w-5 h-5 text-accent-foreground" />
+                <ChevronRight className="w-5 h-5 text-accent-foreground" />
+              </div>
             </div>
           </div>
 
-          {/* Draggable handle */}
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-32 bg-accent cursor-col-resize"
-            onMouseDown={handleDragStart}
-            onMouseUp={handleDragEnd}
-            whileHover={{ scaleX: 1.5 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-accent rounded-full flex items-center justify-center">
-              <ChevronLeft className="w-5 h-5 text-accent-foreground" />
-              <ChevronRight className="w-5 h-5 text-accent-foreground" />
-            </div>
-          </motion.div>
+          {/* Helper text */}
+          <div className="absolute inset-x-0 bottom-4 text-center text-sm text-foreground/80">
+            Drag to compare the transformation
+          </div>
         </motion.div>
       </div>
     </section>

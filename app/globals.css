@@ -163,3 +163,80 @@ body::before {
 html {
   scroll-behavior: smooth;
 }
+
+/* Brand logo glow + float */
+.brand-logo {
+  filter: drop-shadow(0 0 8px var(--ring));
+  transition: transform .4s ease, filter .4s ease;
+  animation: brand-float 6s ease-in-out infinite;
+}
+.brand-logo:hover {
+  filter: drop-shadow(0 0 18px var(--ring));
+  transform: translateY(-2px) scale(1.02);
+}
+@keyframes brand-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Liquid fill effect shared styles */
+[data-slot="button"],
+.nav-liquid {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Buttons: subtle liquid wave overlay fill on hover/focus */
+[data-slot="button"]::after {
+  content: "";
+  position: absolute;
+  left: -10%;
+  bottom: -140%;
+  width: 120%;
+  height: 260%;
+  background:
+    radial-gradient(60% 60% at 30% 40%, color-mix(in oklch, var(--ring) 80%, transparent) 0%, transparent 60%),
+    radial-gradient(55% 55% at 70% 60%, color-mix(in oklch, var(--accent) 70%, transparent) 0%, transparent 60%);
+  opacity: .35;
+  transform: translateY(55%);
+  transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .3s ease;
+  pointer-events: none;
+}
+[data-slot="button"]:hover::after,
+[data-slot="button"]:focus-visible::after {
+  transform: translateY(0%);
+  opacity: .55;
+  animation: liquid-wave 2.8s linear infinite;
+}
+[data-slot="button"]:hover {
+  box-shadow: 0 0 0 1px var(--ring), 0 10px 30px color-mix(in oklch, var(--ring) 25%, transparent);
+}
+
+/* Nav links: animated gradient underline that swells like liquid */
+.nav-liquid {
+  padding-bottom: 2px;
+}
+.nav-liquid::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .45s cubic-bezier(.2,.8,.2,1), height .45s ease;
+}
+.nav-liquid:hover::after,
+.nav-liquid:focus-visible::after {
+  transform: scaleX(1);
+  height: 4px;
+  animation: liquid-wave 3s linear infinite;
+}
+
+@keyframes liquid-wave {
+  from { background-position: 0% 0; }
+  to   { background-position: 200% 0; }
+}
