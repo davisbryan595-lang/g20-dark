@@ -20,15 +20,15 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24">
+        <div className="flex items-center justify-between h-28">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group" aria-label="Go to home">
-            <div className="relative w-24 h-24 brand-logo">
+            <div className="relative w-32 h-32 brand-logo">
               <Image
                 src="https://cdn.builder.io/api/v1/image/assets%2F5c758e804cba4fa3a488e9088887877b%2F7e0659a1448142469160bc2e1941f920?format=webp&width=800"
                 alt="G2O Auto Detailing logo"
                 fill
-                sizes="96px"
+                sizes="128px"
                 className="object-contain"
                 priority
               />

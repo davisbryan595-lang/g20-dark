@@ -18,12 +18,12 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <div className="flex items-center gap-2 mb-4">
-              <div className="relative w-10 h-10 footer-brand-logo">
+              <div className="relative w-16 h-16 footer-brand-logo">
                 <Image
                   src="https://cdn.builder.io/api/v1/image/assets%2F5c758e804cba4fa3a488e9088887877b%2F7e0659a1448142469160bc2e1941f920?format=webp&width=800"
                   alt="G2O Auto Detailing logo"
                   fill
-                  sizes="40px"
+                  sizes="64px"
                   className="object-contain"
                 />
               </div>
