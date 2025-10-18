@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 import { Facebook, Instagram, Twitter } from "lucide-react"
 
 export default function Footer() {
@@ -17,8 +18,14 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-secondary/50 flex items-center justify-center">
-                <span className="text-sm font-bold text-primary">G2O</span>
+              <div className="relative w-10 h-10 footer-brand-logo">
+                <Image
+                  src="https://cdn.builder.io/api/v1/image/assets%2F5c758e804cba4fa3a488e9088887877b%2F7e0659a1448142469160bc2e1941f920?format=webp&width=800"
+                  alt="G2O Auto Detailing logo"
+                  fill
+                  sizes="40px"
+                  className="object-contain"
+                />
               </div>
               <span className="font-bold">G2O Detailing</span>
             </div>
